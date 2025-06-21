@@ -153,8 +153,7 @@
       <div class="search-popup-container">
 
         <form role="search" method="get" class="search-form" action="">
-          <input type="search" id="search-form" class="search-field" placeholder="Type and press enter" value=""
-            name="s" />
+          <input type="search" id="search-form" class="search-field" placeholder="Type and press enter" value="" name="s" />
           <button type="submit" class="search-submit"><svg class="search">
               <use xlink:href="#search"></use>
             </svg></button>
@@ -1175,15 +1174,37 @@
     window.location.href = 'romance.html'; // ✅ ไปหน้าใหม่
   });
 
-  document.getElementById('lifestyle-link').addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location.href = 'lifestyle.html'; // ✅ ไปหน้าใหม่
-  });
+    document.getElementById('lifestyle-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'lifestyle.html'; // ✅ ไปหน้าใหม่
+    });
 
-  document.getElementById('recipe-link').addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location.href = 'recipe.html'; // ✅ ไปหน้าใหม่
-  });
+    document.getElementById('recipe-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'recipe.html'; // ✅ ไปหน้าใหม่
+    });
+
+    document.querySelector('.search-form').addEventListener('submit', function (e) {
+      e.preventDefault(); // ❗️กันไม่ให้ form รีเฟรชหน้า
+
+      const query = document.querySelector('.search-field').value.trim().toLowerCase();
+
+      if (!query) {
+        alert("Please enter a keyword.");
+        return;
+      }
+
+      // ✅ เปรียบเทียบคำค้น
+      if (query.includes("romance")) {
+        window.location.href = "romance.html";
+      } else if (query.includes("lifestyle")) {
+        window.location.href = "lifestyle.html";
+      } else if (query.includes("recipe")) {
+        window.location.href = "recipe.html";
+      } else {
+        alert("No matching category found.");
+      }
+    });
 
     function contactSubmit(){
       let data = {
