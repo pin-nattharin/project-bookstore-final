@@ -16,18 +16,25 @@ router.post('/', (req, res) => {
     }
         
 
-    const users = JSON.parse(data);
+    const users = JSON.parse(data);  
     const user = users.find(u => u.email === loginUsername);
 
      if (!user) {
-      return res.status(400).json({ message: 'Incorrected Username' });
+      return res.status(400).json({ success: false, message: 'Incorrected Username' });
     }
 
     if (user.password !== loginPassword) {
-      return res.status(400).json({ message: 'Incorrected Password' });
+      return res.status(400).json({ success: false, message: 'Incorrected Password' });
     }
 
-    return res.json({ message: 'Login successfully' });
+    return res.json({ 
+      success: true,
+      message: 'Login successfully',
+      user: {
+        email: user.email,
+        name: user.name || ''
+      }
+    });
   });
 });
 

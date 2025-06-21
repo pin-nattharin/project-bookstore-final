@@ -162,20 +162,18 @@
 
         <h5 class="cat-list-title">Browse Categories</h5>
 
+        <!--search-->
         <ul class="cat-list">
-          <li class="cat-list-item">
-            <a href="#" title="Romance">Featured</a>
-          </li>
-          <li class="cat-list-item">
-            <a href="#" title="Thriller">Latest items</a>
-          </li>
-          <li class="cat-list-item">
-            <a href="#" title="Sci-fi">Best reviewed</a>
-          </li>
-          <li class="cat-list-item">
-            <a href="#" title="Cooking">On sale</a>
-          </li>
-        </ul>
+        <li class="cat-list-item">
+          <a href="#" id="romance-link" title="Romance">Romance</a>
+        </li>
+        <li class="cat-list-item">
+          <a href="#" id="lifestyle-link" title="Lifestyle">Lifestyle</a>
+        </li>
+        <li class="cat-list-item">
+          <a href="#" id="recipe-link" title="Recipe">Recipe</a>
+        </li>
+      </ul>
 
       </div>
     </div>
@@ -282,7 +280,7 @@
                         <use xlink:href="#user"></use>
                       </svg>
                     </a>
-                    <!-- Modal -->
+                     <!-- Modal login -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                       aria-hidden="true">
                       <div class="modal-dialog">
@@ -302,51 +300,39 @@
                                     aria-selected="false">Register</button>
                                 </div>
                               </nav>
+                              <!--sign in tab-->
                               <div class="tab-content" id="nav-tabContent">
                                 <div class="tab-pane fade active show" id="nav-sign-in" role="tabpanel"
                                   aria-labelledby="nav-sign-in-tab">
                                   <div class="form-group py-3">
-                                    <label class="mb-2" for="sign-in">Username or email address *</label>
-                                    <input type="text" minlength="2" name="username" placeholder="Your Username"
-                                      class="form-control w-100 rounded-3 p-3" required>
+                                    <label class="mb-2" for="loginUsername">Username or email address *</label>
+                                    <input type="text" id="loginUsername" name="loginUsername" class="form-control w-100 rounded-3 p-3" placeholder="Your Username" required>
                                   </div>
                                   <div class="form-group pb-3">
-                                    <label class="mb-2" for="sign-in">Password *</label>
-                                    <input type="password" minlength="2" name="password" placeholder="Your Password"
-                                      class="form-control w-100 rounded-3 p-3" required>
+                                    <label class="mb-2" for="loginPassword">Password *</label>
+                                    <input type="password" id="loginPassword" name="loginPassword" class="form-control w-100 rounded-3 p-3" placeholder="Your Password" required>
                                   </div>
-                                  <label class="py-3">
-                                    <input type="checkbox" required="" class="d-inline">
-                                    <span class="label-body">Remember me</span>
-                                    <span class="label-body"><a href="#" class="fw-bold">Forgot Password</a></span>
-                                  </label>
-                                  <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Login</button>
+                                  <input type="button" onclick="login()" class="btn btn-dark w-100 my-3" value="login">
                                 </div>
+                                <!--register tab-->
                                 <div class="tab-pane fade" id="nav-register" role="tabpanel"
                                   aria-labelledby="nav-register-tab">
                                   <div class="form-group py-3">
-                                    <label class="mb-2" for="register">Your email address *</label>
-                                    <input type="text" minlength="2" name="username" placeholder="Your Email Address"
-                                      class="form-control w-100 rounded-3 p-3" required>
+                                    <label class="mb-2" for="registerUsername">Your email address *</label>
+                                    <input type="text" id="registerUsername" name="registerUsername" class="form-control w-100 rounded-3 p-3" placeholder="Your Email Address" required>
                                   </div>
                                   <div class="form-group pb-3">
-                                    <label class="mb-2" for="sign-in">Password *</label>
-                                    <input type="password" minlength="2" name="password" placeholder="Your Password"
-                                      class="form-control w-100 rounded-3 p-3" required>
+                                    <label class="mb-2" for="registerPassword">Password *</label>
+                                    <input type="password" id="registerPassword" name="registerPassword" class="form-control w-100 rounded-3 p-3" placeholder="Your Password"  required>
                                   </div>
-                                  <label class="py-3">
-                                    <input type="checkbox" required="" class="d-inline">
-                                    <span class="label-body">I agree to the <a href="#" class="fw-bold">Privacy
-                                        Policy</a></span>
-                                  </label>
-                                  <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Register</button>
+                                  <input type="button" onclick="contactSubmit()" class="btn btn-dark w-100 my-3" value="register">
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> <!-- Modal end -->
                   </li>
                   <li class="wishlist-dropdown dropdown pe-3">
                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
@@ -1183,6 +1169,84 @@
     <script type="text/javascript" src="js/script.js"></script>
   </body>
   <script>
+
+    document.getElementById('romance-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = 'romance.html'; // ✅ ไปหน้าใหม่
+  });
+
+  document.getElementById('lifestyle-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = 'lifestyle.html'; // ✅ ไปหน้าใหม่
+  });
+
+  document.getElementById('recipe-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = 'recipe.html'; // ✅ ไปหน้าใหม่
+  });
+
+    function contactSubmit(){
+      let data = {
+                  registerUsername : document.getElementById('registerUsername').value.trim(),
+                  registerPassword : document.getElementById('registerPassword').value.trim()
+                 };
+      console.log(data);
+
+      if (!data.registerUsername || !data.registerPassword) {
+        alert("Please fill in all fields.");
+        return;
+      } else {
+        fetch('http://localhost:5000/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+      alert(result.message || 'Register successfully');
+    })
+      }  
+}
+async function login() {
+  const data = {
+    loginUsername: document.getElementById('loginUsername').value.trim(),
+    loginPassword: document.getElementById('loginPassword').value.trim() 
+  };
+
+  if (!data.loginUsername || !data.loginPassword) {
+    alert("Please enter both username and password.");
+    return;
+  }
+
+  try {
+    const res = await fetch('http://localhost:5000/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      // ✅ ตั้งค่า login ให้ localStorage
+      localStorage.setItem('login', 'true');
+      localStorage.setItem('user', JSON.stringify(result.user || {}));
+      
+      alert(result.message || 'Login successful');
+
+      // ✅ Redirect หรือปิด modal แล้วแต่การใช้งาน
+      window.location.href = '/'; // หรือปิด modal login
+    } else {
+      alert(result.message || 'Login failed');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Error logging in');
+  }
+}
+
   document.addEventListener('DOMContentLoaded', function () {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
