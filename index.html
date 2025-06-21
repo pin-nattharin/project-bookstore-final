@@ -563,6 +563,7 @@
                 <div class="position-absolute">
                   <p class="bg-primary py-1 px-3 fs-6 text-white rounded-2">10% off</p>
                 </div>
+                <!--first product-->
                 <img src="images/product-item1.png" class="img-fluid shadow-sm" alt="product item">
                 <h6 class="mt-4 mb-0 fw-bold"><a href="index.html">House of Sky Breath</a></h6>
                 <div class="review-content d-flex">
@@ -605,7 +606,7 @@
                 </div>
               </div>
             </div>
-            <!--first product-->
+            <!--second product-->
             <div class="swiper-slide">
               <div class="card position-relative p-4 border rounded-3">
                 <img src="images/product-item2.png" class="img-fluid shadow-sm" alt="product item">
@@ -1205,6 +1206,33 @@
         alert("No matching category found.");
       }
     });
+
+     document.addEventListener('click', function (e) {
+    if (e.target.closest('.add-to-cart')) {
+      const button = e.target.closest('.add-to-cart');
+
+      // ✅ ตรวจ login (ถ้ามีระบบ login)
+      //const isLoggedIn = localStorage.getItem('login') === 'true';
+      //if (!isLoggedIn) {
+        //alert('Please login before adding to cart.');
+        //return;
+      //}
+
+      // ✅ ดึงข้อมูลสินค้าจาก data attributes
+      const item = {
+        name: button.getAttribute('data-name'),
+        price: parseFloat(button.getAttribute('data-price'))
+      };
+
+      // ✅ เพิ่มสินค้าเข้า cart (เก็บใน localStorage)
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.push(item);
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      // ✅ แจ้งเตือน
+      alert(`"${item.name}" added to cart.`);
+    }
+  });
 
     function contactSubmit(){
       let data = {
