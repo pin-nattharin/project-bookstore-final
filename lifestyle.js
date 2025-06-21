@@ -42,16 +42,15 @@ document.addEventListener('DOMContentLoaded', () => {
     container.appendChild(col);
   });
 
-  document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('add-to-cart')) {
-      const button = e.target;
-      const isLoggedIn = localStorage.getItem('login') === 'true';
+  //document.addEventListener('click', (e) => {
+    //if (e.target.classList.contains('add-to-cart')) {
+      //const button = e.target;
+      //const isLoggedIn = localStorage.getItem('login') === 'true';
 
-      if (!isLoggedIn) {
-        alert("Please login before adding to cart.");
-        // เรียก modal login ได้ถ้ามี
-        return;
-      }
+      //if (!isLoggedIn) {
+        //alert("Please login before adding to cart.");
+        //return;
+      //}
 
       const item = {
         name: button.dataset.name,
@@ -63,5 +62,5 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('cart', JSON.stringify(cart));
       alert(`${item.name} added to cart.`);
     }
-  });
-});
+  );
+//});
