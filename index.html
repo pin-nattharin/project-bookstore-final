@@ -152,12 +152,26 @@
     <div class="search-popup">
       <div class="search-popup-container">
 
-        <form role="search" method="get" class="search-form" action="">
+        <!-- <form role="search" method="get" class="search-form" action="">
           <input type="search" id="search-form" class="search-field" placeholder="Type and press enter" value="" name="s" />
           <button type="submit" class="search-submit"><svg class="search">
               <use xlink:href="#search"></use>
             </svg></button>
-        </form>
+        </form> -->
+
+        <!-- HTML Search Form -->
+<form role="search" method="get" class="search-form" action="" onsubmit="return false;">
+  <input type="search" id="search-form" class="search-field" placeholder="Type and press enter" name="s" />
+  <button type="submit" class="search-submit" onclick="searchBooks()">
+    <svg class="search">
+      <use xlink:href="#search"></use>
+    </svg>
+  </button>
+</form>
+
+<!-- Display search results -->
+<div id="search-results"></div>
+
 
         <h5 class="cat-list-title">Browse Categories</h5>
 
@@ -1356,6 +1370,42 @@ async function login() {
 
     renderCart();
   });
+
+  function searchBooks() {
+  const searchTerm = document.getElementById('search-form').value.trim();
+  if (searchTerm === "") {
+    document.getElementById('search-results').innerHTML = "Please enter a search term.";
+    return;
+  }
+
+  // ส่งคำค้นหาไปที่ API
+  fetch(`/api/books/name/${encodeURIComponent(searchTerm)}`)
+    .then(response => response.json())
+    .then(data => {
+      const resultsDiv = document.getElementById('search-results');
+      if (data.length > 0) {
+        let resultsHtml = "<ul>";
+        data.forEach(book => {
+          resultsHtml += `
+            <li>
+              <h3>${book.name}</h3>
+              <p>Price: $${book.price}</p>
+              <img src="${book.image}" alt="${book.name}" width="100">
+            </li>
+          `;
+        });
+        resultsHtml += "</ul>";
+        resultsDiv.innerHTML = resultsHtml;
+      } else {
+        resultsDiv.innerHTML = "No books found.";
+      }
+    })
+    .catch(err => {
+      console.error("Error fetching data:", err);
+      document.getElementById('search-results').innerHTML = "Error occurred. Please try again later.";
+    });
+}
+
 </script>
 
 </html>
