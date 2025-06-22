@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       `;
         
-
+  
     container.appendChild(col);
   });
 
@@ -56,7 +56,32 @@ document.addEventListener('DOMContentLoaded', () => {
         // เรียก modal login ได้ถ้ามี
        // return;
       //}
+        document.addEventListener('click', function (e) {
+    if (e.target.closest('.add-to-cart')) {
+      const button = e.target.closest('.add-to-cart');
 
+      // ✅ ตรวจ login (ถ้ามีระบบ login)
+      //const isLoggedIn = localStorage.getItem('login') === 'true';
+      //if (!isLoggedIn) {
+        //alert('Please login before adding to cart.');
+        //return;
+      //}
+
+      // ✅ ดึงข้อมูลสินค้าจาก data attributes
+      const item = {
+        name: button.getAttribute('data-name'),
+        price: parseFloat(button.getAttribute('data-price'))
+      };
+
+      // ✅ เพิ่มสินค้าเข้า cart (เก็บใน localStorage)
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.push(item);
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      // ✅ แจ้งเตือน
+      alert(`"${item.name}" added to cart.`);
+    }
+  });
       const item = {
         name: button.dataset.name,
         price: parseFloat(button.dataset.price)
