@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
+  // แสดงหนังสือ
   romanceBooks.forEach(book => {
     const col = document.createElement('div');
     col.className = 'col';
@@ -46,33 +47,27 @@ document.addEventListener('DOMContentLoaded', () => {
     container.appendChild(col);
   });
 
-  //document.addEventListener('click', (e) => {
-    //if (e.target.classList.contains('add-to-cart')) {
-      //const button = e.target;
-      //const isLoggedIn = localStorage.getItem('login') === 'true';
-
-      //if (!isLoggedIn) {
-        //alert("Please login before adding to cart.");
-        // เรียก modal login ได้ถ้ามี
-       // return;
-      //}
-        document.addEventListener('click', function (e) {
-    if (e.target.closest('.add-to-cart')) {
+  document.addEventListener('click', function (e) {
       const button = e.target.closest('.add-to-cart');
+      if (!button) return;
 
-      // ✅ ตรวจ login (ถ้ามีระบบ login)
-      //const isLoggedIn = localStorage.getItem('login') === 'true';
-      //if (!isLoggedIn) {
-        //alert('Please login before adding to cart.');
-        //return;
-      //}
+      const isLoggedIn = localStorage.getItem('login');
+      if (!isLoggedIn) {
+        alert("Please login before adding to cart.");
+        // เรียก modal login ได้ถ้ามี
+        const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        modal.show();
+        return;
+      }
 
-      // ✅ ดึงข้อมูลสินค้าจาก data attributes
+      // ถ้า login แล้ว
       const item = {
-        name: button.getAttribute('data-name'),
-        price: parseFloat(button.getAttribute('data-price'))
+      book_id: parseInt(button.getAttribute('data-id')),
+      name: button.getAttribute('data-name'),
+      price: parseFloat(button.getAttribute('data-price')),
+      quantity: 1
       };
-
+      
       // ✅ เพิ่มสินค้าเข้า cart (เก็บใน localStorage)
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
       cart.push(item);
@@ -81,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // ✅ แจ้งเตือน
       alert(`"${item.name}" added to cart.`);
     }
-  });
+  );
       const item = {
         name: button.dataset.name,
         price: parseFloat(button.dataset.price)
