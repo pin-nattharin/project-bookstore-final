@@ -15,8 +15,8 @@ router.post('/', (req, res) => {
         return res.status(500).json({ message: 'Server error' });
     }
         
+    const users = JSON.parse(data);
 
-    const users = JSON.parse(data);  
     const user = users.find(u => u.email === loginUsername);
 
      if (!user) {
@@ -27,13 +27,13 @@ router.post('/', (req, res) => {
       return res.status(400).json({ success: false, message: 'Incorrected Password' });
     }
 
+    console.log(`User ${loginUsername} logged in successfully`);
+
+
     return res.json({ 
       success: true,
       message: 'Login successfully',
-      user: {
-        email: user.email,
-        name: user.name || ''
-      }
+      user: { email: user.email}
     });
   });
 });

@@ -5,7 +5,6 @@
   <title>Romance Books</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="romance.js" defer></script>
 </head>
 <body class="bg-light">
 
@@ -20,7 +19,55 @@
       <a href="index.html" class="btn btn-outline-secondary">← Back to Categories</a>
     </div>
   </div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('romance-books');
 
+      const romanceBooks = [
+        { id: 101, name: "Pride and Prejudice", price: 299, image: "images/romance1.jpg" },
+        { id: 102, name: "Me Before You", price: 259, image: "images/romance2.jpg" },
+        { id: 103, name: "The Notebook", price: 279, image: "images/romance3.jpg" }
+      ];
+
+      romanceBooks.forEach(book => {
+        const col = document.createElement('div');
+        col.className = 'col';
+
+        col.innerHTML = `
+          <div class="card h-100 shadow-sm">
+            <img src="${book.image}" class="card-img-top" alt="${book.name}">
+            <div class="card-body">
+              <h5 class="card-title">${book.name}</h5>
+              <p class="card-text text-danger">$${book.price}</p>
+              <button class="btn btn-primary w-100" onclick="addToCart(${book.id}, '${book.name}', ${book.price})">Add to Cart</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(col);
+      });
+    });
+
+    function addToCart(bookId, name, price) {
+      fetch('http://localhost:5000/api/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // ✅ ส่ง cookie session ไปด้วย
+        body: JSON.stringify({ productId: bookId, name, price })
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.error) {
+          alert(result.error);
+          window.location.href = 'login.html'; // ❗ไปล็อกอินถ้าไม่ได้ login
+        } else {
+          alert(result.message || "Added to cart!");
+        }
+      })
+      .catch(err => {
+        console.error("Add to cart error:", err);
+        alert("Please login before adding to cart.");
+      });
+    }
+  </script>
 </body>
-
 </html>

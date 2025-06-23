@@ -23,11 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   // แสดงหนังสือ
-  romanceBooks.forEach(book => {
+    romanceBooks.forEach(book => {
     const col = document.createElement('div');
     col.className = 'col';
 
-    col.innerHTML = `
+      col.innerHTML = `
       <div class="card h-100 shadow-sm">
         <img src="${book.image}" class="card-img-top" alt="${book.name}">
         <div class="card-body">
@@ -37,8 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
           data-id="${book.id}" 
           data-name="${book.name}" 
           data-price="${book.price}">
-          Add to Cart
-          </button>
+          Add to Cart </button>
         </div>
       </div>
       `;
@@ -61,12 +60,24 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // ถ้า login แล้ว
-      const item = {
-      book_id: parseInt(button.getAttribute('data-id')),
-      name: button.getAttribute('data-name'),
-      price: parseFloat(button.getAttribute('data-price')),
-      quantity: 1
-      };
+      function addToCart(id, name, price) {
+      fetch('/api/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // ✅ ส่ง session
+        body: JSON.stringify({ productId: id, name, price })
+      })
+       .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+          window.location.href = 'login.html'; // ✅ redirect ถ้ายังไม่ login
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(() => alert("เกิดข้อผิดพลาด"));
+    }
       
       // ✅ เพิ่มสินค้าเข้า cart (เก็บใน localStorage)
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
