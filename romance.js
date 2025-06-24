@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('romance-books');
+  //console.log('login:', localStorage.getItem('login')); // debug
+
 
   const romanceBooks = [
     {
@@ -53,31 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const isLoggedIn = localStorage.getItem('login');
       if (!isLoggedIn) {
         alert("Please login before adding to cart.");
-        // เรียก modal login ได้ถ้ามี
-        const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
-        modal.show();
+        window.location.href = 'login.html';
         return;
       }
 
-      // ถ้า login แล้ว
-      function addToCart(id, name, price) {
-      fetch('/api/cart/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // ✅ ส่ง session
-        body: JSON.stringify({ productId: id, name, price })
-      })
-       .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          alert(data.error);
-          window.location.href = 'login.html'; // ✅ redirect ถ้ายังไม่ login
-        } else {
-          alert(data.message);
-        }
-      })
-      .catch(() => alert("เกิดข้อผิดพลาด"));
+      // ✅ ดึง user email (ใช้เป็น key)
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userEmail = user?.email;
+    if (!userEmail) {
+      alert("User data missing, please login again.");
+      localStorage.removeItem('login');
+      window.location.href = 'login.html';
+      return;
     }
+
       
       // ✅ เพิ่มสินค้าเข้า cart (เก็บใน localStorage)
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -88,12 +79,28 @@ document.addEventListener('DOMContentLoaded', () => {
       alert(`"${item.name}" added to cart.`);
     }
   );
+      // สร้างข้อมูลสินค้า
       const item = {
         name: button.dataset.name,
         price: parseFloat(button.dataset.price)
       };
 
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      // ✅ ถ้ายังไม่มี cart ของ user นี้
+    if (!carts[userEmail]) {
+      carts[userEmail] = [];
+    }
+
+    // ✅ ถ้ามีสินค้านี้แล้ว → เพิ่ม quantity
+    const existingItem = carts[userEmail].find(i => i.id === item.id);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      carts[userEmail].push(item);
+    }
+
+
       cart.push(item);
       localStorage.setItem('cart', JSON.stringify(cart));
       alert(`${item.name} added to cart.`);

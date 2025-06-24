@@ -26,8 +26,7 @@ router.post('/', (req, res) => {
     if (user.password !== loginPassword) {
       return res.status(400).json({ success: false, message: 'Incorrected Password' });
     }
-
-    console.log(`User ${loginUsername} logged in successfully`);
+    
 
 
     return res.json({ 

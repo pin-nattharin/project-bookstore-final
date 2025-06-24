@@ -1,7 +1,6 @@
 const express = require('express');
 const fs = require('fs');
 const session = require('express-session');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
@@ -11,13 +10,19 @@ const app = express();
 
 app.use(bodyParser.json());
 
+const cors = require('cors');
+app.use(cors({
+  origin: 'http://localhost:5500',
+  credentials: true
+}));
+
 // Middleware for sessions
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true,    // true ถ้าใช้ HTTPS
+    secure: false,    // true ถ้าใช้ HTTPS
     sameSite: 'lax'   // หรือ 'none' ถ้าเป็น secure
   }
 }));

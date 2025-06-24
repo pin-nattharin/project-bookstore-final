@@ -104,13 +104,13 @@ async function login() {
     if (result.success) {
       // ✅ ตั้งค่า login ให้ localStorage
       localStorage.setItem('login', 'true');
-      localStorage.setItem('user', JSON.stringify(result.user || {}));
+      localStorage.setItem('user', JSON.stringify(result.user));
       
-      alert(result.message || 'Login successful');
+      alert('Login successful');
       window.location.href = 'index.html'; // ✅ เปลี่ยนหน้าเมื่อ login แล้ว
 
     } else {
-      alert(result.message || 'Login failed');
+      alert('Login failed');
     }
 })
   .catch(err => {
