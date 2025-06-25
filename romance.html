@@ -50,6 +50,15 @@
     //let currentUserEmail = sessionStorage.getItem('email'); // ใช้ sessionStorage แทน
 
     function addToCart(bookId, name, price) {
+      // เช็คว่ามี user ใน localStorage หรือไม่
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      if (!user) {
+    alert("Please login before adding to cart.");
+    window.location.href = 'login.html';
+    return;
+    }
+
       const quantity = 10;
 
     fetch('http://localhost:3000/api/cart', {
