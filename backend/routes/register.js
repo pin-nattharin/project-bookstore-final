@@ -5,13 +5,31 @@ const path = require('path');
 const router = express.Router();
 const userFilePath = path.join(__dirname, '../data/user.json');
 
+function loadUsers() {
+  if (!fs.existsSync(dataFile)) return [];
+  const raw = fs.readFileSync(dataFile, 'utf8');
+  return JSON.parse(raw);
+}
+
+function saveUsers(users) {
+  fs.writeFileSync(dataFile, JSON.stringify(users, null, 2));
+}
+
 router.post('/', (req, res) => {
-  const { registerUsername, registerPassword } = req.body;
+  const { registerUsername, registerPassword, registerRole } = req.body;
   console.log('Received registration data:', req.body);
 
     if (!registerUsername || !registerPassword) {
     return res.status(400).json({ message: 'Email and password are required.' });
   }
+
+  const users = loadUsers();
+  if (users.find(u => u.email === email)) {
+    return res.status(400).json({ message: 'Email already registered' });
+  }
+
+  users.push({ email, password, role: role || 'user' });
+  saveUsers(users);
 
   fs.readFile(userFilePath, 'utf8', (err, data) => {
     let users = [];
@@ -26,7 +44,8 @@ router.post('/', (req, res) => {
 
     const newUser = {
       email: registerUsername,
-      password: registerPassword
+      password: registerPassword,
+      //role: registerRole
     };
     users.push(newUser);
 

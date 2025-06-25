@@ -22,5 +22,13 @@
   {
     "email": "pin24@gmail.com",
     "password": "1234"
+  },
+  {
+    "email": "pin25@gmail.com",
+    "password": "1234"
+  },
+  {
+    "email": "admin1@gmail.com",
+    "password": "3004"
   }
 ]

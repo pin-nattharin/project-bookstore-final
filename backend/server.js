@@ -6,7 +6,7 @@ const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
-
+const loginRoute = require('./routes/login'); // สมมติว่าอยู่ใน routes/login.js
 
 app.use(bodyParser.json());
 

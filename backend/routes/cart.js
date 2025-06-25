@@ -76,13 +76,21 @@ router.get('/:cart_id', (req, res) => {
 
 // 3. POST - เพิ่มสินค้าในตะกร้า
 router.post('/', (req, res) => {
+  console.log("Session on add to cart:", req.session); // ดูว่า user มาหรือไม่
+  
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Please login first' });
+  }
+  const userId = req.session.user.id;
+  //const { book_id, quantity } = req.body;
+
   const { user_id, book_id, quantity } = req.body;
   const query = 'INSERT INTO cart (user_id, book_id, quantity) VALUES (?, ?, ?)';
   db.run(query, [user_id, book_id, quantity], function(err) {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    res.status(201).json({ id: this.lastID, user_id, book_id, quantity });
+    res.status(201).json({ message: 'Added to cart', id: this.lastID, user_id, book_id, quantity });
   });
 });
 
