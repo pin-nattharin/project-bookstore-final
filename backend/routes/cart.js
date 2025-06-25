@@ -81,10 +81,10 @@ router.post('/', (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ error: 'Please login first' });
   }
-  const userId = req.session.user.id;
-  //const { book_id, quantity } = req.body;
+  const user_id = req.session.user.id;
+  const { book_id, quantity } = req.body;
 
-  const { user_id, book_id, quantity } = req.body;
+  //const { user_id, book_id, quantity } = req.body;
   const query = 'INSERT INTO cart (user_id, book_id, quantity) VALUES (?, ?, ?)';
   db.run(query, [user_id, book_id, quantity], function(err) {
     if (err) {
