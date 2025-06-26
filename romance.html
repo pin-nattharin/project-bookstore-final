@@ -22,6 +22,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
       const container = document.getElementById('romance-books');
+      const addToCartButtons = document.querySelectorAll('.add-to-cart');
 
       const romanceBooks = [
         { id: 101, name: "Pride and Prejudice", price: 299, image: "images/romance1.jpg" },
@@ -50,49 +51,30 @@
     //let currentUserEmail = sessionStorage.getItem('email'); // ใช้ sessionStorage แทน
 
     function addToCart(bookId, name, price) {
-      // เช็คว่ามี user ใน localStorage หรือไม่
-      const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem('user'));
 
-      if (!user) {
+  if (!user) {
     alert("Please login before adding to cart.");
     window.location.href = 'login.html';
     return;
-    }
+  }
 
-      const quantity = 10;
+  const quantity = 1;
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    fetch('http://localhost:3000/api/cart', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    credentials: 'include',  // ส่ง cookie session ไปด้วย (สำคัญมาก)
-    body: JSON.stringify({
-      //user_id: userId,
-      book_id: bookId,
-      quantity: quantity
-    })
-  })
+  const existingItem = cart.find(item => item.bookId === bookId);
 
-  .then(res => {
-      if (res.status === 401) {
-        alert("Please login before adding to cart.");
-        window.location.href = 'login.html';
-        throw new Error("Unauthorized");
-      }
-      return res.json();
-    })
-    .then(result => {
-      if (result.error) {
-        alert("Error: " + result.error);
-      } else {
-        alert(`"${name}" added to cart.`);
-      }
-    })
-    .catch(err => {
-      console.error("Add to cart error:", err);
-    });
+  if (existingItem) {
+    existingItem.quantity += quantity;
+  } else {
+    cart.push({ bookId, name, price, quantity });
+  }
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+  alert(`"${name}" added to cart.`);
 }
+
+
     
   </script>
 </body>

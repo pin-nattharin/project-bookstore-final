@@ -48,19 +48,41 @@ const sqlite3 = require('sqlite3').verbose();
 // เปิดการเชื่อมต่อกับฐานข้อมูล
 const db = new sqlite3.Database('./webtechAssignment2.db');
 
-// 1. GET - ค้นหาตะกร้าของผู้ใช้โดย user_id
-router.get('/user/:user_id', (req, res) => {
-  const userId = req.params.user_id;
-  db.all('SELECT * FROM cart WHERE user_id = ?', [userId], (err, rows) => {
+// สร้างตาราง cart ถ้ายังไม่มี
+db.run(`
+  CREATE TABLE IF NOT EXISTS cart (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_email TEXT,
+    book_id INTEGER,
+    quantity INTEGER
+  )
+`);
+
+
+// 1. GET - ค้นหาตะกร้าของผู้ใช้โดย user_email
+router.get('/cart', (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ message: 'Not logged in' });
+
+  const sql = `
+    SELECT c.id, c.quantity, b.name, b.price
+    FROM cart c
+    JOIN books b ON c.book_id = b.id
+    WHERE c.user_email = ?
+  `;
+
+  db.all(sql, [user.email], (err, rows) => {
     if (err) {
-      return res.status(500).json({ error: err.message });
+      console.error('DB error:', err);
+      return res.status(500).json({ error: 'Database error' });
     }
-    res.json(rows);
+    res.json({ cart: rows });
   });
 });
 
+
 // 2. GET - ค้นหาตะกร้าจาก cart_id
-router.get('/:cart_id', (req, res) => {
+router.get('/cart/:cart_id', (req, res) => {
   const cartId = req.params.cart_id;
   db.get('SELECT * FROM cart WHERE id = ?', [cartId], (err, row) => {
     if (err) {
@@ -75,27 +97,26 @@ router.get('/:cart_id', (req, res) => {
 });
 
 // 3. POST - เพิ่มสินค้าในตะกร้า
-router.post('/', (req, res) => {
-  console.log("Session on add to cart:", req.session); // ดูว่า user มาหรือไม่
+router.post('/cart', (req, res) => {
   
   if (!req.session.user) {
     return res.status(401).json({ error: 'Please login first' });
   }
-  const user_id = req.session.user.id;
+  const user_email = req.session.user.email;
   const { book_id, quantity } = req.body;
 
-  //const { user_id, book_id, quantity } = req.body;
-  const query = 'INSERT INTO cart (user_id, book_id, quantity) VALUES (?, ?, ?)';
-  db.run(query, [user_id, book_id, quantity], function(err) {
+  //const { user_email, book_id, quantity } = req.body;
+  const query = 'INSERT INTO cart (user_email, book_id, quantity) VALUES (?, ?, ?)';
+  db.run(query, [user_email, book_id, quantity], function(err) {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    res.status(201).json({ message: 'Added to cart', id: this.lastID, user_id, book_id, quantity });
+    res.status(201).json({ message: 'Added to cart', id: this.lastID, user_email, book_id, quantity });
   });
 });
 
 // 4. PUT - อัปเดตจำนวนสินค้าภายในตะกร้า
-router.put('/:cart_id', (req, res) => {
+router.put('/cart/:cart_id', (req, res) => {
   const { quantity } = req.body;
   const cartId = req.params.cart_id;
   const query = 'UPDATE cart SET quantity = ? WHERE id = ?';
@@ -112,7 +133,7 @@ router.put('/:cart_id', (req, res) => {
 });
 
 // 5. DELETE - ลบสินค้าจากตะกร้า
-router.delete('/:cart_id', (req, res) => {
+router.delete('/cart/:cart_id', (req, res) => {
   const cartId = req.params.cart_id;
   const query = 'DELETE FROM cart WHERE id = ?';
   db.run(query, [cartId], function(err) {
@@ -126,5 +147,22 @@ router.delete('/:cart_id', (req, res) => {
     }
   });
 });
+
+// DELETE - ล้างตะกร้าทั้งหมดของผู้ใช้ (ใช้ตอนจ่ายเงินเสร็จ)
+router.delete('/cart/all', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Please login first' });
+  }
+  const user_email = req.session.user.email;
+  const query = 'DELETE FROM cart WHERE user_email = ?';
+  db.run(query, [user_email], function(err) {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ message: 'All cart items deleted' });
+  });
+});
+
+
 
 module.exports = router;

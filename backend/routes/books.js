@@ -7,7 +7,8 @@ const sqlite3 = require('sqlite3').verbose();
 // ตั้งค่าเก็บไฟล์รูปที่ /uploads
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, './images/');
+    cb(null, path.join(__dirname, '../images'));
+
   },
   filename: function(req, file, cb) {
     const ext = path.extname(file.originalname);

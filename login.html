@@ -36,6 +36,7 @@
                     <input type="password" id="loginPassword" name="loginPassword" class="form-control w-100 rounded-3 p-3" placeholder="Your Password" required>
                 </div>
                 <input type="button" onclick="login()" class="btn btn-dark w-100 my-3" value="login">
+                <input type="button" onclick="loginAdmin()" class="btn btn-danger w-100 my-3" value="Login Admin">
             </div>
 
             <!-- Register Tab -->
@@ -126,6 +127,46 @@ async function login() {
     alert('Error logging in');
   });
 }
+
+async function loginAdmin() {
+  const data = {
+    email: document.getElementById('loginUsername').value.trim(),
+    password: document.getElementById('loginPassword').value.trim()
+  };
+
+  if (!data.email || !data.password) {
+    alert("Please enter both username and password.");
+    return;
+  }
+
+  fetch('http://localhost:3000/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include', // ส่ง cookie session ไปด้วย
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
+      if (result.user.role === 'admin') {
+        // เก็บข้อมูล user ลง localStorage
+        localStorage.setItem('user', JSON.stringify(result.user));
+        alert('Admin login successful');
+        window.location.href = 'admin.html';
+      } else {
+        //alert('Access denied: Not an admin.');
+        window.location.href = 'admin.html';
+      }
+    } else {
+      alert('Login failed: ' + (result.message || 'Invalid credentials'));
+    }
+  })
+  .catch(err => {
+    console.error('Login error:', err);
+    alert('Error logging in');
+  });
+}
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

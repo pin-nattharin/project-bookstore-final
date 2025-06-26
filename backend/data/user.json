@@ -1,34 +1,19 @@
 [
   {
-    "email": "nattharin@gmail.com",
-    "password": "3004"
-  },
-  {
-    "email": "nattharin1@gmail.com",
-    "password": "1234"
-  },
-  {
-    "email": "nattharin3@gmail.com",
-    "password": "1234"
-  },
-  {
-    "email": "nattharin23@gmail.com",
-    "password": "1234"
-  },
-  {
-    "email": "pin3@gmail.com",
-    "password": "1234"
-  },
-  {
-    "email": "pin24@gmail.com",
-    "password": "1234"
-  },
-  {
-    "email": "pin25@gmail.com",
+    "email": "pin@gmail.com",
     "password": "1234"
   },
   {
     "email": "admin1@gmail.com",
     "password": "3004"
+  },
+  {
+    "email": "hh@gmail.com",
+    "password": "66666"
+  },
+  {
+    "email": "admin2@gmail.com",
+    "password": "123456",
+    "role": "admin"
   }
 ]

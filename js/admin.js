@@ -46,16 +46,19 @@ function saveProduct() {
   const method = id ? 'PUT' : 'POST';
   const url = id ? `${BASE_URL}/${id}` : BASE_URL;
 
-  fetch(BASE_URL, {
+  fetch(url, {
     method,
     body: formData
   })
-    .then(res => res.json())
-    .then(() => {
-      clearForm();
-      loadProducts();
-    })
-    .catch(err => console.error('Upload error:', err));
+    .then(async res => {
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(errText);
+  }
+  return res.json();
+})
+.catch(err => console.error('Upload error:', err));
+
 }
 
 function editProduct(product) {

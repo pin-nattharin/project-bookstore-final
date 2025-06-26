@@ -1,7 +1,10 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const path = require('path');
+const sqlite3 = require('sqlite3').verbose();
+
+const DB_PATH = path.join(__dirname, 'webtechAssignment2.db'); // __dirname คือ folder backend
+const db = new sqlite3.Database(DB_PATH);
 
 const app = express();
 const PORT = 3000;
@@ -9,11 +12,8 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..'))); // ให้โหลด index.html ได้
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
-const db = new sqlite3.Database('./data.db', (err) => {
-  if (err) console.error('❌ DB Error:', err.message);
-  else console.log('✅ Connected to SQLite DB');
-});
 
 db.run(`
   CREATE TABLE IF NOT EXISTS products (

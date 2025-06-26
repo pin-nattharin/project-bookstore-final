@@ -11,6 +11,8 @@ const loginRoute = require('./routes/login'); // สมมติว่าอย�
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 
 app.use(bodyParser.json());
 
@@ -35,39 +37,16 @@ app.get('/romance', (req, res) => {
   res.sendFile(path.join(__dirname, 'romance.html'));
 });
 
+app.get('/lifestyle', (req, res) => {
+  res.sendFile(path.join(__dirname, 'lifestyle.html'));
+});
+
+app.get('/recipe', (req, res) => {
+  res.sendFile(path.join(__dirname, 'recipe.html'));
+});
+
 const CART_FILE = path.join(__dirname, 'data/cart.json'); // กำหนด path ให้ชัดเจน
 
-// ADD TO CART (requires login)
-app.post('/api/cart/add', (req, res) => {
-  if (!req.session.user) return res.status(401).json({ error: 'Please login' });
-
-  const { productId, name, price } = req.body;
-  const email = req.session.user.email;
-
-  let cartData = {};
-  if (fs.existsSync(CART_FILE)) {
-    cartData = JSON.parse(fs.readFileSync(CART_FILE, 'utf8'));
-  }
-
-  if (!cartData[email]) cartData[email] = [];
-
-  cartData[email].push({ productId, name, price, quantity: 1 });
-
-  fs.writeFileSync(CART_FILE, JSON.stringify(cartData, null, 2));
-  res.json({ message: 'Product added to cart', cart: cartData[email] });
-});
-
-// GET CART (for logged-in user)
-app.get('/api/cart', (req, res) => {
-  if (!req.session.user) return res.status(401).json({ error: 'Please login' });
-
-  const email = req.session.user.email;
-  let cartData = {};
-  if (fs.existsSync(CART_FILE)) {
-    cartData = JSON.parse(fs.readFileSync(CART_FILE, 'utf8'));
-  }
-  res.json({ cart: cartData[email] || [] });
-});
 
 // Routes
 app.use('/api/register', require('./routes/register'));
@@ -83,7 +62,7 @@ app.use('/api/users', usersRoutes);
 
 // Use routes for cart
 const cartRoutes = require('./routes/cart');
-app.use('/api/cart', cartRoutes);
+app.use('/api', cartRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not Found' });
