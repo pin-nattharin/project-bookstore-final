@@ -8,6 +8,10 @@ const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const loginRoute = require('./routes/login'); // สมมติว่าอยู่ใน routes/login.js
 
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+
 app.use(bodyParser.json());
 
 const cors = require('cors');

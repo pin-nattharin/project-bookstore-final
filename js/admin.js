@@ -29,20 +29,33 @@ function saveProduct() {
   const name = document.getElementById('name').value.trim();
   const price = parseFloat(document.getElementById('price').value);
   const category = document.getElementById('category').value.trim();
+  const imageInput = document.getElementById('image')?.files?.[0] || null;
+
+
+  // สร้าง FormData เพื่อส่งไฟล์รูปและข้อมูลอื่น ๆ
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('price', price);
+  formData.append('category', category);
+
+  // ถ้ามีไฟล์รูป เลือกไฟล์อัพโหลด
+  if (imageInput) {
+    formData.append('image', imageInput);
+  }
 
   const method = id ? 'PUT' : 'POST';
   const url = id ? `${BASE_URL}/${id}` : BASE_URL;
 
-  fetch(url, {
-    method: method,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, price, category })
+  fetch(BASE_URL, {
+    method,
+    body: formData
   })
     .then(res => res.json())
     .then(() => {
       clearForm();
       loadProducts();
-    });
+    })
+    .catch(err => console.error('Upload error:', err));
 }
 
 function editProduct(product) {
@@ -65,4 +78,5 @@ function clearForm() {
   document.getElementById('name').value = '';
   document.getElementById('price').value = '';
   document.getElementById('category').value = '';
+  document.getElementById('image').value = '';
 }
