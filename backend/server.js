@@ -58,7 +58,10 @@ app.get('/api/cart', (req, res) => {
   if (!req.session.user) return res.status(401).json({ error: 'Please login' });
 
   const email = req.session.user.email;
-  const cartData = JSON.parse(fs.readFileSync(CART_FILE, 'utf8'));
+  let cartData = {};
+  if (fs.existsSync(CART_FILE)) {
+    cartData = JSON.parse(fs.readFileSync(CART_FILE, 'utf8'));
+  }
   res.json({ cart: cartData[email] || [] });
 });
 

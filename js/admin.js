@@ -1,14 +1,14 @@
-const API_URL = 'http://localhost:3000/api/books';
+const BASE_URL = 'http://localhost:3000/api/books';
 
 document.addEventListener('DOMContentLoaded', loadProducts);
 
 function loadProducts() {
-  fetch(API_URL)
+  fetch(`${BASE_URL}/getall`)
     .then(res => res.json())
-    .then(products => {
+    .then(books => {
       const table = document.getElementById('productTable');
       table.innerHTML = '';
-      products.forEach(p => {
+      books.forEach(p => {
         table.innerHTML += `
           <tr>
             <td>${p.id}</td>
@@ -31,10 +31,10 @@ function saveProduct() {
   const category = document.getElementById('category').value.trim();
 
   const method = id ? 'PUT' : 'POST';
-  const url = id ? `${API_URL}/${id}` : API_URL;
+  const url = id ? `${BASE_URL}/${id}` : BASE_URL;
 
   fetch(url, {
-    method,
+    method: method,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, price, category })
   })
@@ -54,7 +54,7 @@ function editProduct(product) {
 
 function deleteProduct(id) {
   if (confirm('Are you sure you want to delete this product?')) {
-    fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+    fetch(`${BASE_URL}/${id}`, { method: 'DELETE' })
       .then(res => res.json())
       .then(() => loadProducts());
   }

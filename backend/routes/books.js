@@ -5,19 +5,25 @@ const sqlite3 = require('sqlite3').verbose();
 // เปิดการเชื่อมต่อกับฐานข้อมูล
 const db = new sqlite3.Database('./webtechAssignment2.db');
 
+// ตารางสินค้า (สร้างถ้ายังไม่มี)
+db.run(`CREATE TABLE IF NOT EXISTS books (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT,
+  price REAL,
+  category TEXT
+)`);
+
 //0.getall
 router.get('/getall', (req, res) => {
-  const bookId = req.params.id;
-  db.get('SELECT * FROM books',(err, row) => {
+  //const bookId = req.params.id;
+  db.all('SELECT * FROM books',(err, rows) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    if (row) {
-      res.json(row);
-    } else {
-      res.status(404).json({ message: 'Book not found' });
-    }
-  });
+    else {
+      res.json(rows);
+  };
+});
 });
 
 // 1. GET - ค้นหาหนังสือโดย id
@@ -59,13 +65,13 @@ router.get('/name/:name', (req, res) => {
 
 // 4. POST - เพิ่มหนังสือใหม่
 router.post('/', (req, res) => {
-  const { name, price, image, category } = req.body;
-  const query = 'INSERT INTO books (name, price, image, category) VALUES (?, ?, ?, ?)';
-  db.run(query, [name, price, image, category], function(err) {
+  const { name, price, category } = req.body;
+  const query = 'INSERT INTO books (name, price, category) VALUES (?, ?, ?)';
+  db.run(query, [name, price, category], function(err) {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    res.status(201).json({ id: this.lastID, name, price, image, category });
+    res.status(201).json({ id: this.lastID, name, price, category });
   });
 });
 
@@ -99,6 +105,14 @@ router.delete('/:id', (req, res) => {
     } else {
       res.status(404).json({ message: 'Book not found' });
     }
+
+    // ส่งข้อมูลกลับ
+    res.status(201).json({
+      id: this.lastID,
+      name,
+      price,
+      category
+    });
   });
 });
 
