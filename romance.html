@@ -24,6 +24,8 @@
       const container = document.getElementById('romance-books');
       const addToCartButtons = document.querySelectorAll('.add-to-cart');
 
+      
+
       const romanceBooks = [
         { id: 101, name: "Pride and Prejudice", price: 299, image: "images/romance1.jpg" },
         { id: 102, name: "Me Before You", price: 259, image: "images/romance2.jpg" },
@@ -73,7 +75,6 @@
   localStorage.setItem('cart', JSON.stringify(cart));
   alert(`"${name}" added to cart.`);
 }
-
 
     
   </script>
