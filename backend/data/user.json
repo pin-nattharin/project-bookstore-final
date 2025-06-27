@@ -15,5 +15,10 @@
     "email": "admin2@gmail.com",
     "password": "123456",
     "role": "admin"
+  },
+  {
+    "email": "admin3@gmail.com",
+    "password": "0000",
+    "role": "user"
   }
 ]
